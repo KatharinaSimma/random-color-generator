@@ -21,10 +21,12 @@ let userLum = process.argv[3];
 
 let outputColor;
 
+// if no arguments are given, choose random
 if (!userHue) {
   outputColor = randomColor();
 }
 
+// if the first argument is 'ask', play user input logic
 if (userHue === 'ask') {
   userHue = readlineSync.question('What is your favorite color? ');
   if (!hues.includes(userHue)) {
@@ -34,19 +36,25 @@ if (userHue === 'ask') {
     process.exit();
   }
   userLum = readlineSync.question('What is your favorite luminosity? ');
-  console.log(
-    "That is not a supported lumninosity. Choose 'bright', 'light' or 'dark'!",
-  );
-  process.exit();
+  if (!luminosities.includes(userLum)) {
+    console.log(
+      "That is not a supported lumninosity. Choose 'bright', 'light' or 'dark'!",
+    );
+    process.exit();
+  }
 }
+
+// check if there is a hue argument and if it is part of the list
 if (userHue && hues.includes(userHue)) {
   outputColor = randomColor({ hue: userHue });
-} else {
+} else if (userHue && !hues.includes(userHue)) {
   console.log(
     "That is not a supported hue. Choose 'red', 'orange', 'yellow', 'green', 'blue',  'purple', 'pink' or even 'monochrome'!",
   );
   process.exit();
 }
+
+// check if there is a luminosity argument and if it is part of the list
 if (userLum && luminosities.includes(userLum)) {
   outputColor = randomColor({ hue: userHue, luminosity: userLum });
 } else if (!userLum) {
@@ -59,15 +67,15 @@ if (userLum && luminosities.includes(userLum)) {
 }
 
 const output = `
-######################################
-######################################
-######################################
+${'#'.repeat(38)}
+${'#'.repeat(38)}
+${'#'.repeat(38)}
 #####                            #####
 #####          ${outputColor}           #####
 #####                            #####
-######################################
-######################################
-######################################
+${'#'.repeat(38)}
+${'#'.repeat(38)}
+${'#'.repeat(38)}
 `;
 
 console.log(chalk.hex(outputColor).bold(output));
